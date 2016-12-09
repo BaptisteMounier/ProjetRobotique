@@ -19,8 +19,8 @@ public class Main {
 		LCD.drawString("Exploration !", 0, 1);
 		LCD.refresh();
 		
-		//Initialisation de la carte
-		Carte map = new Carte(7, 5);
+		//Initialisation des informations du robot
+		Robot robot = new Robot(7, 5, 6, 0, Robot.VERS_LE_HAUT);
 		
 		//Attente d'un appui sur le bouton droit pour démarrer
 		Button.RIGHT.waitForPressAndRelease();
