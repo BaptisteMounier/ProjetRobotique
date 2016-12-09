@@ -17,8 +17,12 @@ public class Main {
 		LCD.drawString("Exploration !", 0, 1);
 		LCD.refresh();
 		
+		//Initialisation de la carte
+		Carte map = new Carte(7, 5);
+		
 		//Attente d'un appui sur le bouton droit pour démarrer
 		Button.RIGHT.waitForPressAndRelease();
+		
 		
 		//Ouverture des ports pour l'utilisation des capteurs
 		BaseSensor[] sensors = {};
