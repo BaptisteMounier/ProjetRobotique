@@ -28,9 +28,11 @@ public class Main {
 		BaseSensor[] sensors = {};
 		
 		//Création des comportements
-		Behavior b1 = new SaveBattery(sensors); //S'arrête quand la batterie est faible
-		Behavior b2 = new ShutDown(sensors); //S'arrête lors de l'appuie sur un bouton
-		Behavior[] bArray = {b1, b2}; //Du moins prioritaire au plus prioritaire
+		Behavior bSaveBattery = new SaveBattery(sensors); //S'arrête quand la batterie est faible
+		Behavior bShutDown = new ShutDown(sensors); //S'arrête lors de l'appuie sur un bouton
+		Behavior bDriveForward = new DriveForward(); //Avancer
+		Behavior[] bArray = {
+				bDriveForward, bSaveBattery, bShutDown}; //Du moins prioritaire au plus prioritaire
 		
 		//Arbitrator pour coordonner les comportements
 		Arbitrator arby = new Arbitrator(bArray);
