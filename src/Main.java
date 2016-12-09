@@ -4,7 +4,9 @@
 
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
+import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.BaseSensor;
+import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.subsumption.Arbitrator;
 import lejos.robotics.subsumption.Behavior;
 
@@ -25,14 +27,16 @@ public class Main {
 		
 		
 		//Ouverture des ports pour l'utilisation des capteurs
-		BaseSensor[] sensors = {};
+		EV3ColorSensor cs = new EV3ColorSensor(SensorPort.S3);
+		BaseSensor[] sensors = {cs};
 		
 		//Création des comportements
 		Behavior bSaveBattery = new SaveBattery(sensors); //S'arrête quand la batterie est faible
 		Behavior bShutDown = new ShutDown(sensors); //S'arrête lors de l'appuie sur un bouton
 		Behavior bDriveForward = new DriveForward(); //Avancer
+		Behavior bDetectColor = new DetectColor(cs);
 		Behavior[] bArray = {
-				bDriveForward, bSaveBattery, bShutDown}; //Du moins prioritaire au plus prioritaire
+				bDriveForward, bDetectColor, bSaveBattery, bShutDown}; //Du moins prioritaire au plus prioritaire
 		
 		//Arbitrator pour coordonner les comportements
 		Arbitrator arby = new Arbitrator(bArray);
