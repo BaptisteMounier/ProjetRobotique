@@ -2,6 +2,7 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
+import lejos.hardware.Button;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.robotics.subsumption.Behavior;
@@ -37,6 +38,7 @@ public class DetectColor implements Behavior {
 	@Override
 	public void action() {
 		System.out.println(detectedColor);
+		Button.RIGHT.waitForPressAndRelease();
 //		Color color = new java.awt.Color(detectedColor)
 //		System.out.println(detectedColor);
 //		Color.
