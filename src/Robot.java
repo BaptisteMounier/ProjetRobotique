@@ -74,6 +74,6 @@ public class Robot {
 	/** Test si la case sur laquelle se trouve le robot a déjà été explorée
 	 * @return Vrai si la case possède une couleur */
 	public boolean isAlreadyExplored(){
-		return (map[posX][posY] != Color.NONE);
+		return (map[posY][posX] != Color.NONE);
 	}
 }
