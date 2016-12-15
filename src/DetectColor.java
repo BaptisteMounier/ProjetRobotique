@@ -3,6 +3,7 @@
 //Contexte : TSCR - Projet robotique - M1 SCA
 
 import lejos.hardware.Button;
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.robotics.subsumption.Behavior;
@@ -41,23 +42,74 @@ public class DetectColor implements Behavior {
 
 	@Override
 	public void action() {
-		//System.out.println(sample[0] + " " + sample[1] + " " + sample[2]);
-
-		//Si détection de noir, changement de case sur le plateau
-		if(detectedColor == Color.BLACK){
+		
+		System.out.println(colorSensor.getCurrentMode());
+		Button.UP.waitForPressAndRelease();
+		
+		switch(detectedColor){
+		case Color.BLACK:
+			System.out.println();
 			System.out.println("Noir");
-			changing = true;
-		}
-		//Si changement de case et couleur détectée différente de noir
-		else if(changing){
-			System.out.println(detectedColor);
-			changing = false;
-			if(!robot.isAlreadyExplored()){
-				robot.updateMap(detectedColor);
-			}
-			robot.updatePos();
-		}
-		oldColor = detectedColor;
+			break;
+		case Color.BLUE:
+			System.out.println("Bleu");
+			break;
+		case Color.BROWN:
+			System.out.println("Marron");
+			break;
+		case Color.CYAN:
+			System.out.println("Cyan");
+			break;
+		case Color.DARK_GRAY:
+			System.out.println("Gris foncé");
+			break;
+		case Color.GRAY:
+			System.out.println("Gris");
+			break;
+		case Color.GREEN:
+			System.out.println("Vert");
+			break;
+		case Color.LIGHT_GRAY:
+			System.out.println("Gris clair");
+			break;
+		case Color.MAGENTA:
+			System.out.println("Magenta");
+			break;
+		case Color.NONE:
+			System.out.println("Aucune couleur");
+			break;
+		case Color.ORANGE:
+			System.out.println("Orange");
+			break;
+		case Color.PINK:
+			System.out.println("Rose");
+			break;
+		case Color.RED:
+			System.out.println("Rouge");
+			break;
+		case Color.WHITE:
+			System.out.println("Blanc");
+			break;
+		case Color.YELLOW:
+			System.out.println("Jaune");
+			break;
+	}
+
+//		//Si détection de noir, changement de case sur le plateau
+//		if(detectedColor == Color.BLACK){
+//			System.out.println("Noir");
+//			changing = true;
+//		}
+//		//Si changement de case et couleur détectée différente de noir
+//		else if(changing){
+//			System.out.println(detectedColor);
+//			changing = false;
+//			if(!robot.isAlreadyExplored()){
+//				robot.updateMap(detectedColor);
+//			}
+//			robot.updatePos();
+//		}
+//		oldColor = detectedColor;
 	}
 
 	@Override
