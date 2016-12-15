@@ -21,7 +21,7 @@ public class DriveForward implements Behavior {
 	
 	@Override
 	public void suppress(){
-//		Motor.B.stop(true);
-//		Motor.C.stop(true);
+		Motor.B.stop(true);
+		Motor.C.stop(true);
 	}
 }
