@@ -11,36 +11,50 @@ public class DetectColor implements Behavior {
 
 	/** Capteur de couleur */
 	private EV3ColorSensor colorSensor;
-	/** Couleur actuellement détectée par le capteur de couleur */
-	private static int currentColor = Color.NONE;
+	/** Dernière couleur détectée par le capteur de couleur */
+	private static int oldColor = Color.NONE;
+	/** Nouvelle couleur détectée par le capteur de couleur */
+	private static int detectedColor = Color.NONE;
 	/** Booléen vrai si en train de changer de case */
 	private static boolean changing = true;
-	
+	/** Robot */
+	private  Robot robot;
+
 	/** Constructeur principal du comportement
 	 * @param cs Capteur de couleur */
-	public DetectColor(EV3ColorSensor cs){
+	public DetectColor(EV3ColorSensor cs, Robot robot){
 		this.colorSensor = cs;
+		this.robot = robot;
 	}
 
 	@Override
 	public boolean takeControl() {
 		//Prend le contrôle si la couleur détectée est une nouvelle couleur
-		return (colorSensor.getColorID() != currentColor);
+		detectedColor = colorSensor.getColorID();
+		return (detectedColor != oldColor);
 	}
 
 	@Override
 	public void action() {
-		int detectedColor = colorSensor.getColorID();
-		
+		System.out.println(detectedColor);
+//		Color color = new java.awt.Color(detectedColor)
+//		System.out.println(detectedColor);
+//		Color.
+
 		//Si détection de noir, changement de case sur le plateau
 		if(detectedColor == Color.BLACK){
+			System.out.println("Noir");
 			changing = true;
 		}
 		//Si changement de case et couleur détectée différente de noir
 		else if(changing){
-			//TODO Mettre à jour carte avec la nouvelle couleur en fonction de la direction d'avancement
+			changing = false;
+			if(!robot.isAlreadyExplored()){
+				robot.updateMap(detectedColor);
+			}
+			robot.updatePos();
 		}
-		currentColor = detectedColor;
+		oldColor = detectedColor;
 	}
 
 	@Override
