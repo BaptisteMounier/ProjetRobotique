@@ -42,4 +42,38 @@ public class Robot {
 			}
 		}
 	}
+	
+	/** Met à jour la carte sur la position du robot
+	 * @param color Couleur detectée et à mettre dans la carte */
+	public void updateMap(int color){
+		
+		map[posY][posX] = color;
+	}
+	
+	/** Met à jour la position du robot en fonction de sa direction */
+	public void updatePos(){
+		switch(direction){
+			case VERS_LA_GAUCHE:
+				posX -= 1;
+				break;
+				
+			case VERS_LA_DROITE:
+				posX += 1;
+				break;
+				
+			case VERS_LE_HAUT:
+				posY -= 1;
+				break;
+				
+			case VERS_LE_BAS:
+				posY += 1;
+				break;
+		}
+	}
+	
+	/** Test si la case sur laquelle se trouve le robot a déjà été explorée
+	 * @return Vrai si la case possède une couleur */
+	public boolean isAlreadyExplored(){
+		return (map[posX][posY] != Color.NONE);
+	}
 }
