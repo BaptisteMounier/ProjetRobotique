@@ -44,7 +44,6 @@ public class DetectColor implements Behavior {
 
 		switch(detectedColor){
 		case Color.BLACK:
-			//Si détection de noir, changement de case sur le plateau
 			System.out.println("Noir");
 			break;
 		case Color.BLUE:
@@ -91,21 +90,21 @@ public class DetectColor implements Behavior {
 			break;
 		}
 
-		//		//Si détection de noir, changement de case sur le plateau
-		//		if(detectedColor == Color.BLACK){
-		//			System.out.println("Noir");
-		//			changing = true;
-		//		}
-		//		//Si changement de case et couleur détectée différente de noir
-		//		else if(changing){
-		//			System.out.println(detectedColor);
-		//			changing = false;
-		//			if(!robot.isAlreadyExplored()){
-		//				robot.updateMap(detectedColor);
-		//			}
-		//			robot.updatePos();
-		//		}
-		//		oldColor = detectedColor;
+		//Si détection de noir, changement de case sur le plateau
+		if(detectedColor == Color.BLACK){
+			System.out.println("Noir");
+			changing = true;
+		}
+		//Si changement de case et couleur détectée différente de noir
+		else if(changing){
+			System.out.println(detectedColor);
+			changing = false;
+			if(!robot.isAlreadyExplored()){
+				robot.updateMap(detectedColor);
+			}
+			robot.updatePos();
+		}
+		oldColor = detectedColor;
 	}
 
 	@Override
