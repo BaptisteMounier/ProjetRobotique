@@ -18,30 +18,30 @@ public class DetectColor implements Behavior {
 	private static int detectedColor = Color.NONE;
 	/** Booléen vrai si en train de changer de case */
 	private static boolean changing = true;
+	/** Variantes R, G et B indépendantes */
+	private float[] sample;
 	/** Robot */
-	private  Robot robot;
+	private Robot robot;
 
 	/** Constructeur principal du comportement
 	 * @param cs Capteur de couleur */
 	public DetectColor(EV3ColorSensor cs, Robot robot){
 		this.colorSensor = cs;
 		this.robot = robot;
+		this.sample = new float[3];
 	}
 
 	@Override
 	public boolean takeControl() {
 		//Prend le contrôle si la couleur détectée est une nouvelle couleur
 		detectedColor = colorSensor.getColorID();
+		colorSensor.getRGBMode().fetchSample(sample, 0);
 		return (detectedColor != oldColor);
 	}
 
 	@Override
 	public void action() {
-		System.out.println(detectedColor);
-		Button.RIGHT.waitForPressAndRelease();
-//		Color color = new java.awt.Color(detectedColor)
-//		System.out.println(detectedColor);
-//		Color.
+		//System.out.println(sample[0] + " " + sample[1] + " " + sample[2]);
 
 		//Si détection de noir, changement de case sur le plateau
 		if(detectedColor == Color.BLACK){
@@ -50,6 +50,7 @@ public class DetectColor implements Behavior {
 		}
 		//Si changement de case et couleur détectée différente de noir
 		else if(changing){
+			System.out.println(detectedColor);
 			changing = false;
 			if(!robot.isAlreadyExplored()){
 				robot.updateMap(detectedColor);

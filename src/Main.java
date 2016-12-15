@@ -47,7 +47,7 @@ public class Main {
 			arby.start();
 		}catch(Exception e){
 			e.printStackTrace();
-			Button.RIGHT.waitForPressAndRelease();
+			Button.UP.waitForPressAndRelease();
 			bShutDown.action();
 		}
 	}
