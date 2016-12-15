@@ -2,8 +2,6 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
-import lejos.hardware.Button;
-import lejos.hardware.lcd.LCD;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.robotics.subsumption.Behavior;
@@ -37,18 +35,16 @@ public class DetectColor implements Behavior {
 		//Prend le contrôle si la couleur détectée est une nouvelle couleur
 		detectedColor = colorSensor.getColorID();
 		colorSensor.getRGBMode().fetchSample(sample, 0);
+		detectedColor = interpreterCouleur();
 		return (detectedColor != oldColor);
 	}
 
 	@Override
 	public void action() {
-		
-		System.out.println(colorSensor.getCurrentMode());
-		Button.UP.waitForPressAndRelease();
-		
+
 		switch(detectedColor){
 		case Color.BLACK:
-			System.out.println();
+			//Si détection de noir, changement de case sur le plateau
 			System.out.println("Noir");
 			break;
 		case Color.BLUE:
@@ -93,23 +89,23 @@ public class DetectColor implements Behavior {
 		case Color.YELLOW:
 			System.out.println("Jaune");
 			break;
-	}
+		}
 
-//		//Si détection de noir, changement de case sur le plateau
-//		if(detectedColor == Color.BLACK){
-//			System.out.println("Noir");
-//			changing = true;
-//		}
-//		//Si changement de case et couleur détectée différente de noir
-//		else if(changing){
-//			System.out.println(detectedColor);
-//			changing = false;
-//			if(!robot.isAlreadyExplored()){
-//				robot.updateMap(detectedColor);
-//			}
-//			robot.updatePos();
-//		}
-//		oldColor = detectedColor;
+		//		//Si détection de noir, changement de case sur le plateau
+		//		if(detectedColor == Color.BLACK){
+		//			System.out.println("Noir");
+		//			changing = true;
+		//		}
+		//		//Si changement de case et couleur détectée différente de noir
+		//		else if(changing){
+		//			System.out.println(detectedColor);
+		//			changing = false;
+		//			if(!robot.isAlreadyExplored()){
+		//				robot.updateMap(detectedColor);
+		//			}
+		//			robot.updatePos();
+		//		}
+		//		oldColor = detectedColor;
 	}
 
 	@Override
@@ -117,4 +113,50 @@ public class DetectColor implements Behavior {
 		//Rien à faire en cas d'arrêt du comportement
 	}
 
+	public int interpreterCouleur(){
+		//sample[red, green, blue]
+
+		//Recherche de la composante maximale
+		float max = 0.f;
+		int indexMax = -1;
+		float[] autres = {0.f, 0.f};
+		int index = 0;
+		for(int i=0; i<sample.length; i++){
+			if (sample[i] > max) {
+				if(i != 0){
+					autres[index++] = max;
+				}
+				max = sample[i];
+				indexMax = i;
+			} else {
+				autres[index++] = sample[i];
+			}
+		}
+
+		//Couleur blanche
+		if(sample[0] > 0.8f && sample[1] > 0.8f && sample[2] > 0.8f){
+			return Color.WHITE;
+		}
+		//Couleur noire
+		else if(sample[0] < 0.2f && sample[1] < 0.2f && sample[2] < 0.2f){
+			return Color.BLACK;
+		}
+		//Cherche si la couleur est une primaire
+		else{//if(max > autres[0]*2 || max > autres[1]*2){
+			if(max > autres[0]*2 && max > autres[1]*2){
+				if(indexMax == 0){
+					return Color.RED;
+				}
+				else if(indexMax == 1){
+					return Color.GREEN;
+				}
+				else{
+					return Color.BLUE;
+				}
+			} else {
+				return Color.BROWN;
+			}
+		}
+
+	}
 }
