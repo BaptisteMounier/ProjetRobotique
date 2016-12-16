@@ -38,7 +38,7 @@ public class Main {
 		Behavior bShutDown = new ShutDown(sensors); //S'arrête lors de l'appuie sur un bouton
 		Behavior bDriveForward = new DriveForward(); //Avancer
 		Behavior bDetectColor = new DetectColor(cs, robot);
-		Behavior bStopExploration = new StopExploration(robot, (ShutDown) bShutDown);
+		Behavior bStopExploration = new StopExploration(robot);
 		Behavior[] bArray = {
 				bDriveForward, bDetectColor, bStopExploration, bSaveBattery, bShutDown}; //Du moins prioritaire au plus prioritaire
 

@@ -23,7 +23,8 @@ public class DetectColor implements Behavior {
 	private Robot robot;
 
 	/** Constructeur principal du comportement
-	 * @param cs Capteur de couleur */
+	 * @param cs Capteur de couleur
+	 * @param robot Robot */
 	public DetectColor(EV3ColorSensor cs, Robot robot){
 		this.colorSensor = cs;
 		this.robot = robot;
@@ -42,120 +43,90 @@ public class DetectColor implements Behavior {
 	@Override
 	public void action() {
 
-		switch(detectedColor){
-		case Color.BLACK:
-			System.out.println("Noir");
-			break;
-		case Color.BLUE:
-			System.out.println("Bleu");
-			break;
-		case Color.BROWN:
-			System.out.println("Marron");
-			break;
-		case Color.CYAN:
-			System.out.println("Cyan");
-			break;
-		case Color.DARK_GRAY:
-			System.out.println("Gris foncé");
-			break;
-		case Color.GRAY:
-			System.out.println("Gris");
-			break;
-		case Color.GREEN:
-			System.out.println("Vert");
-			break;
-		case Color.LIGHT_GRAY:
-			System.out.println("Gris clair");
-			break;
-		case Color.MAGENTA:
-			System.out.println("Magenta");
-			break;
-		case Color.NONE:
-			System.out.println("Aucune couleur");
-			break;
-		case Color.ORANGE:
-			System.out.println("Orange");
-			break;
-		case Color.PINK:
-			System.out.println("Rose");
-			break;
-		case Color.RED:
-			System.out.println("Rouge");
-			break;
-		case Color.WHITE:
-			System.out.println("Blanc");
-			break;
-		case Color.YELLOW:
-			System.out.println("Jaune");
-			break;
-		}
-
 		//Si détection de noir, changement de case sur le plateau
-		if(detectedColor == Color.BLACK){
-			System.out.println("Noir");
+		if(detectedColor == Color.BLACK && oldColor != Color.BLACK){
+			System.out.println(colorToString(detectedColor));
 			changing = true;
+			oldColor = detectedColor;
 		}
 		//Si changement de case et couleur détectée différente de noir
-		else if(changing){
-			System.out.println(detectedColor);
+		else if(detectedColor != Color.BLACK && changing){
+			System.out.println(colorToString(detectedColor));
 			changing = false;
 			if(!robot.isAlreadyExplored()){
 				robot.updateMap(detectedColor);
 			}
 			robot.updatePos();
+			oldColor = detectedColor;
 		}
-		oldColor = detectedColor;
 	}
 
 	@Override
 	public void suppress() {
 		//Rien à faire en cas d'arrêt du comportement
 	}
+	
+	/** Convertit une couleur en chaîne de caractères
+	 * @param detectedColor Couleur
+	 * @return Nom de la couleur */
+	public String colorToString(int detectedColor){
+		switch(detectedColor){
+			case Color.BLACK:
+				return("Noir");
+			case Color.BLUE:
+				return("Bleu");
+			case Color.BROWN:
+				return("Marron");
+			case Color.RED:
+				return("Rouge");
+			case Color.WHITE:
+				return("Blanc");
+			case Color.GREEN:
+				return("Vert");
+			case Color.CYAN:
+				return("Cyan");
+			case Color.DARK_GRAY:
+				return("Gris foncé");
+			case Color.GRAY:
+				return("Gris");
+			case Color.LIGHT_GRAY:
+				return("Gris clair");
+			case Color.MAGENTA:
+				return("Magenta");
+			case Color.ORANGE:
+				return("Orange");
+			case Color.PINK:
+				return("Rose");
+			case Color.YELLOW:
+				return("Jaune");
+			case Color.NONE:
+				 default:
+				return("Aucune couleur");
+		}
+	}
 
 	public int interpreterCouleur(){
 		//sample[red, green, blue]
-
-		//Recherche de la composante maximale
-		float max = 0.f;
-		int indexMax = -1;
-		float[] autres = {0.f, 0.f};
-		int index = 0;
-		for(int i=0; i<sample.length; i++){
-			if (sample[i] > max) {
-				if(i != 0){
-					autres[index++] = max;
-				}
-				max = sample[i];
-				indexMax = i;
-			} else {
-				autres[index++] = sample[i];
-			}
-		}
-
-		//Couleur blanche
-		if(sample[0] > 0.8f && sample[1] > 0.8f && sample[2] > 0.8f){
+		float red = sample[0];
+		float green = sample[1];
+		float blue = sample[2];
+		
+		//Calcule de la couleur réelle
+		if(red + green + blue > 0.5f){
+			return Color.WHITE;
+		} else if(red + green + blue < 0.15f){
+			return Color.BLACK;
+		} else if(green > (red + blue)){
+			return Color.GREEN;
+		} else if(red > (green + blue) * 4){
+			return Color.RED;
+		} else if((green + blue) > red * 2){
+			return Color.BLUE;
+		} else if(red > (green + blue) * 2){
+			return Color.BROWN;
+		} else {
+			//Ne trouve pas blanc à cause de la limite de la case (noir + blanc mélangé)
 			return Color.WHITE;
 		}
-		//Couleur noire
-		else if(sample[0] < 0.2f && sample[1] < 0.2f && sample[2] < 0.2f){
-			return Color.BLACK;
-		}
-		//Cherche si la couleur est une primaire
-		else{//if(max > autres[0]*2 || max > autres[1]*2){
-			if(max > autres[0]*2 && max > autres[1]*2){
-				if(indexMax == 0){
-					return Color.RED;
-				}
-				else if(indexMax == 1){
-					return Color.GREEN;
-				}
-				else{
-					return Color.BLUE;
-				}
-			} else {
-				return Color.BROWN;
-			}
-		}
-
 	}
 }
