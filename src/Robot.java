@@ -46,7 +46,6 @@ public class Robot {
 	/** Met à jour la carte sur la position du robot
 	 * @param color Couleur detectée et à mettre dans la carte */
 	public void updateMap(int color){
-		
 		map[posY][posX] = color;
 	}
 	
@@ -75,5 +74,11 @@ public class Robot {
 	 * @return Vrai si la case possède une couleur */
 	public boolean isAlreadyExplored(){
 		return (map[posY][posX] != Color.NONE);
+	}
+	
+	/** Test si le robot est en dehors de la carte (physique sur la dernière case)
+	 * @return Vrai si le robot est sorti */
+	public boolean isOutOfMap(){
+		return (posY < 0 || posX < 0 || posY > map.length || posX > map[0].length);
 	}
 }
