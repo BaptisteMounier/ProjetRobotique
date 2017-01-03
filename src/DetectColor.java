@@ -42,16 +42,18 @@ public class DetectColor implements Behavior {
 
 	@Override
 	public void action() {
-
 		//Si détection de noir, changement de case sur le plateau
 		if(detectedColor == Color.BLACK && oldColor != Color.BLACK){
-			System.out.println(colorToString(detectedColor));
+			//System.out.println(colorToString(detectedColor));
+			
 			changing = true;
 			oldColor = detectedColor;
 		}
 		//Si changement de case et couleur détectée différente de noir
 		else if(detectedColor != Color.BLACK && changing){
-			System.out.println(colorToString(detectedColor));
+			//System.out.println(colorToString(detectedColor));
+			robot.displayMap();
+			
 			changing = false;
 			if(!robot.isAlreadyExplored()){
 				robot.updateMap(detectedColor);
@@ -125,7 +127,7 @@ public class DetectColor implements Behavior {
 		} else if(red > (green + blue) * 2){
 			return Color.BROWN;
 		} else {
-			//Ne trouve pas blanc à cause de la limite de la case (noir + blanc mélangé)
+			//Ne trouve pas blanc à cause de la limite de la case (noir + blanc mélangés)
 			return Color.WHITE;
 		}
 	}

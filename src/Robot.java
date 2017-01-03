@@ -2,6 +2,9 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
+import java.util.HashMap;
+
+import lejos.hardware.lcd.LCD;
 import lejos.robotics.Color;
 
 /** Représentation du Robot */
@@ -25,6 +28,9 @@ public class Robot {
 	/** Déplacement décroissant en X */
 	public final static int VERS_LA_GAUCHE = 4;
 	
+	/** Correspondance des couleurs avec l'environnement */
+	private static HashMap<Integer,String> environnement;
+	
 	/** Constructeur principal du robot
 	 * @param nbLigne Nombre de lignes
 	 * @param nbColonne Nombre de colonnes
@@ -41,6 +47,14 @@ public class Robot {
 				map[l][c] = Color.NONE;
 			}
 		}
+		
+		environnement = new HashMap<Integer,String>();
+		environnement.put(Color.GREEN, "Prairie");
+		environnement.put(Color.BLUE, "Océan");
+		environnement.put(Color.BROWN, "Montagne");
+		environnement.put(Color.RED, "Ville");
+		environnement.put(Color.WHITE, "Départ");
+		environnement.put(Color.NONE, "X");
 	}
 	
 	/** Met à jour la carte sur la position du robot
@@ -80,5 +94,21 @@ public class Robot {
 	 * @return Vrai si le robot est sorti */
 	public boolean isOutOfMap(){
 		return (posY < 0 || posX < 0 || posY > map.length || posX > map[0].length);
+	}
+	
+	/** Affiche la carte sur l'afficheur LCD */
+	public void displayMap(){
+		String toDisplay = "";
+		
+		for(int l=0; l<map.length; l++){
+			for(int c=0; c<map[0].length; c++){
+				toDisplay += (environnement.get(map[l][c])).charAt(0) + " | ";
+			}
+			toDisplay = toDisplay.substring(0, toDisplay.length()-3) + "\n";
+		}
+		
+		LCD.clear();
+		LCD.drawString(toDisplay, 0, 0);
+		LCD.refresh();
 	}
 }
