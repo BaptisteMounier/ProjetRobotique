@@ -15,6 +15,9 @@ public class DriveForward implements Behavior {
 	
 	@Override
 	public void action(){
+		Motor.B.setSpeed(100);
+		Motor.C.setSpeed(100);
+		
 		Motor.B.forward();
 		Motor.C.forward();
 	}
