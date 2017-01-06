@@ -98,17 +98,18 @@ public class Robot {
 	
 	/** Affiche la carte sur l'afficheur LCD */
 	public void displayMap(){
-		String toDisplay = "";
+		LCD.clear();
+		String toDisplay;
 		
 		for(int l=0; l<map.length; l++){
+			toDisplay = "";
 			for(int c=0; c<map[0].length; c++){
 				toDisplay += (environnement.get(map[l][c])).charAt(0) + " | ";
 			}
-			toDisplay = toDisplay.substring(0, toDisplay.length()-3) + "\n";
+			toDisplay = toDisplay.substring(0, toDisplay.length()-2);
+			LCD.drawString(toDisplay, 0, l);
 		}
 		
-		LCD.clear();
-		LCD.drawString(toDisplay, 0, 0);
 		LCD.refresh();
 	}
 }
