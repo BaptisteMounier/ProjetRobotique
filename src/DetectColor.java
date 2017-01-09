@@ -47,6 +47,7 @@ public class DetectColor implements Behavior {
 //			System.out.println(colorToString(detectedColor));
 			
 			changing = true;
+			robot.updatePos();
 			oldColor = detectedColor;
 		}
 		//Si changement de case et couleur détectée différente de noir
@@ -57,7 +58,6 @@ public class DetectColor implements Behavior {
 			if(!robot.isAlreadyExplored()){
 				robot.updateMap(detectedColor);
 			}
-			robot.updatePos();
 			robot.displayMap();
 			oldColor = detectedColor;
 		}
