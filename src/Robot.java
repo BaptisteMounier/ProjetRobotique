@@ -61,7 +61,7 @@ public class Robot {
 		environnement.put(Color.BROWN, "Montagne");
 		environnement.put(Color.RED, "Ville");
 		environnement.put(Color.WHITE, "Départ");
-		environnement.put(Color.NONE, "X");
+		environnement.put(Color.NONE, "-");
 	}
 
 	/** Met à jour la carte sur la position du robot
