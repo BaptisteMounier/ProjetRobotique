@@ -20,14 +20,17 @@ public class Robot {
 	private int direction;
 
 	/** Déplacement décroissant en Y */
-	public final static int VERS_LE_HAUT = 1;
+	public final static int VERS_LE_HAUT = 0;
 	/** Déplacement croissant en X */
-	public final static int VERS_LA_DROITE = 2;
+	public final static int VERS_LA_DROITE = 1;
 	/** Déplacement croissant en Y */
-	public final static int VERS_LE_BAS = 3;
+	public final static int VERS_LE_BAS = 2;
 	/** Déplacement décroissant en X */
-	public final static int VERS_LA_GAUCHE = 4;
-
+	public final static int VERS_LA_GAUCHE = 3;
+	
+	/***/
+	public final static int ROTATION_DROITE = 1;
+	public final static int ROTATION_GAUCHE = -1;
 	/** Correspondance des couleurs avec l'environnement */
 	private static HashMap<Integer,String> environnement;
 
@@ -83,7 +86,13 @@ public class Robot {
 			break;
 		}
 	}
-
+	
+	/** Mettre à jour la direction du robot en fonction d'une rotation
+	 * @param rotation Rotation effectuée entraînant la modification de la direction : ROTATION_DROITE | ROTATION_GAUCHE */
+	public void updateDirection(int rotation){
+		direction = (direction + rotation) % 4;
+		if(direction < 0) direction = 3;		//Car modulo conserve les valeurs négatives
+	}
 	/** Test si la case sur laquelle se trouve le robot a déjà été explorée
 	 * @return Vrai si la case possède une couleur */
 	public boolean isAlreadyExplored(){
@@ -109,7 +118,6 @@ public class Robot {
 			toDisplay = toDisplay.substring(0, toDisplay.length()-2);
 			LCD.drawString(toDisplay, 0, l);
 		}
-
 		LCD.refresh();
 	}
 }

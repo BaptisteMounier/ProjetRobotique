@@ -52,13 +52,13 @@ public class DetectColor implements Behavior {
 		//Si changement de case et couleur détectée différente de noir
 		else if(detectedColor != Color.BLACK && changing){
 //			System.out.println(colorToString(detectedColor));
-			robot.displayMap();
 			
 			changing = false;
 			if(!robot.isAlreadyExplored()){
 				robot.updateMap(detectedColor);
 			}
 			robot.updatePos();
+			robot.displayMap();
 			oldColor = detectedColor;
 		}
 	}
@@ -116,7 +116,7 @@ public class DetectColor implements Behavior {
 		//Calcule de la couleur réelle
 		if(red + green + blue > 0.5f){
 			return Color.WHITE;
-		} else if(red + green + blue < 0.15f){
+		} else if(red + green + blue < 0.1f){
 			return Color.BLACK;
 		} else if(green > (red + blue)){
 			return Color.GREEN;

@@ -39,8 +39,10 @@ public class Main {
 		Behavior bDriveForward = new DriveForward(); //Avancer
 		Behavior bDetectColor = new DetectColor(cs, robot);
 		Behavior bStopExploration = new StopExploration(robot);
+		Behavior bTurnRight = new TurnRight(robot);
 		Behavior[] bArray = {
-				bDriveForward, bDetectColor, bStopExploration, bSaveBattery, bShutDown}; //Du moins prioritaire au plus prioritaire
+				bDriveForward, bDetectColor, bTurnRight, bStopExploration, bSaveBattery, bShutDown};
+				//Du moins prioritaire au plus prioritaire
 
 		//Arbitrator pour coordonner les comportements
 		Arbitrator arby = new Arbitrator(bArray);
