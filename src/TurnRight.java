@@ -7,6 +7,7 @@ import lejos.hardware.motor.Motor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
 
+/** Comportement de quart-de-tour vers la droite */
 public class TurnRight implements Behavior {
 	/** Robot */
 	private Robot robot;
@@ -19,7 +20,7 @@ public class TurnRight implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return (Button.LEFT.isDown());
+		return (false);
 	}
 
 	@Override

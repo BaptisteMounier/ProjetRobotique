@@ -41,8 +41,11 @@ public class Main {
 		Behavior bStopExploration = new StopExploration(robot);
 		Behavior bTurnRight = new TurnRight(robot);
 		Behavior bTurnLeft = new TurnLeft(robot);
+		Behavior bAboutTurn = new AboutTurn(robot);
 		Behavior[] bArray = {
-				bDriveForward, bDetectColor, bTurnLeft, bTurnRight, bStopExploration, bSaveBattery, bShutDown};
+				bDriveForward, bDetectColor,
+				bTurnLeft, bTurnRight, bAboutTurn, //Priorité négligeable entre ces 3 comportements
+				bStopExploration, bSaveBattery, bShutDown};
 				//Du moins prioritaire au plus prioritaire
 
 		//Arbitrator pour coordonner les comportements

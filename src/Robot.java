@@ -28,9 +28,13 @@ public class Robot {
 	/** Déplacement décroissant en X */
 	public final static int VERS_LA_GAUCHE = 3;
 	
-	/***/
+	/** Changement d'orientation par rotation droite */
 	public final static int ROTATION_DROITE = 1;
+	/** Changement d'orientation par rotation gauche */
 	public final static int ROTATION_GAUCHE = -1;
+	/** Changement d'orientation par demi-tour */
+	public final static int DEMI_TOUR = 2;
+	
 	/** Correspondance des couleurs avec l'environnement */
 	private static HashMap<Integer,String> environnement;
 
