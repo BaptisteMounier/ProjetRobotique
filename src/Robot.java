@@ -104,7 +104,7 @@ public class Robot {
 	/** Test si le robot est en dehors de la carte (physique sur la dernière case)
 	 * @return Vrai si le robot est sorti */
 	public boolean isOutOfMap(){
-		return (posY < 0 || posX < 0 || posY > map.length || posX > map[0].length);
+		return (posY < 0 || posX < 0 || posY > map.length-1 || posX > map[0].length-1);
 	}
 	
 	/** Affiche la carte sur l'afficheur LCD */
