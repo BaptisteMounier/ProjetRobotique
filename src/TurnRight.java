@@ -35,6 +35,7 @@ public class TurnRight implements Behavior {
 		pilot.travel(13.); //Avance de 13cm = 1,5 case + 1 limite entre deux cases
 		pilot.rotate(-80.); //En degré dans le sens inverse des aiguilles d'une montre
 		//Demander rotation de 80° effectue une rotation de 90°
+		pilot.travel(-2.); //Recule de 2cm (pour bien rester callé au centre de la case après rotation)
 		
 		//Modification de l'orientation
 		robot.updateDirection(Robot.ROTATION_DROITE);

@@ -32,6 +32,7 @@ public class TurnLeft implements Behavior {
 		
 		pilot.setTravelSpeed(5.); //En cm
 		pilot.setRotateSpeed(30.); //Degrés/sec
+		pilot.travel(2.); //Avance de 2cm (pour bien rester callé au centre de la case après rotation)
 		pilot.rotate(80.); //En degré dans le sens inverse des aiguilles d'une montre
 		//Demander rotation de 80° effectue une rotation de 90°
 		pilot.travel(-13.); //Avance de 13cm = 1,5 case + 1 limite entre deux cases
