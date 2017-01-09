@@ -21,7 +21,7 @@ public class Main {
 		LCD.refresh();
 
 		//Initialisation des informations du robot
-		Robot robot = new Robot(7, 5, 0, 6, Robot.VERS_LE_HAUT);
+		Robot robot = new Robot(7, 5, 1, 6, Robot.VERS_LE_HAUT);
 		Motor.B.setSpeed(100);
 		Motor.C.setSpeed(100);
 
@@ -40,8 +40,9 @@ public class Main {
 		Behavior bDetectColor = new DetectColor(cs, robot);
 		Behavior bStopExploration = new StopExploration(robot);
 		Behavior bTurnRight = new TurnRight(robot);
+		Behavior bTurnLeft = new TurnLeft(robot);
 		Behavior[] bArray = {
-				bDriveForward, bDetectColor, bTurnRight, bStopExploration, bSaveBattery, bShutDown};
+				bDriveForward, bDetectColor, bTurnLeft, bTurnRight, bStopExploration, bSaveBattery, bShutDown};
 				//Du moins prioritaire au plus prioritaire
 
 		//Arbitrator pour coordonner les comportements
