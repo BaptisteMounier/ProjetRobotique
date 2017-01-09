@@ -21,7 +21,7 @@ public class ShutDown implements Behavior {
 	@Override
 	public boolean takeControl() {
 		//Prend le contrôle si le bouton droit est appuyé
-		return (Button.RIGHT.isDown());
+		return (Button.ENTER.isDown());
 	}
 
 	@Override

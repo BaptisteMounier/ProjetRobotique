@@ -20,7 +20,7 @@ public class TurnRight implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return (false);
+		return (Button.RIGHT.isDown());
 	}
 
 	@Override

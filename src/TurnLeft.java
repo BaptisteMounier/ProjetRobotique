@@ -20,7 +20,7 @@ public class TurnLeft implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return (false);
+		return (Button.LEFT.isDown());
 	}
 
 	@Override
