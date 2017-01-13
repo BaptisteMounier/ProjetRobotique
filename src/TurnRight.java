@@ -11,22 +11,27 @@ import lejos.robotics.subsumption.Behavior;
 public class TurnRight implements Behavior {
 	/** Robot */
 	private Robot robot;
+	/** Comportement d'avancement */
+	private Behavior bDriveForward;
 
 	/** Constructeur principal du comportement
 	 * @param robot Robot */
-	public TurnRight(Robot robot){
+	public TurnRight(Robot robot, Behavior bDriveForward){
 		this.robot = robot;
+		this.bDriveForward = bDriveForward;
 	}
 
 	@Override
 	public boolean takeControl() {
-		return (Button.RIGHT.isDown());
+		//Prend le contrôle si le robot veut faire demi-tour
+		return (robot.isRequestingForTurnRight());
+		//return (Button.RIGHT.isDown());
 	}
 
 	@Override
 	public void action() {
-		Motor.B.stop(true);
-		Motor.C.stop(true);
+		robot.stopDemandeQuartDeTourDroit();
+		bDriveForward.suppress();
 		
 		DifferentialPilot pilot = new DifferentialPilot(5.6, 12.0, Motor.B, Motor.C);
 			//Diamètre des roues, espace entre les roues, moteur gauche, moteur droit

@@ -3,7 +3,6 @@
 //Contexte : TSCR - Projet robotique - M1 SCA
 
 import lejos.hardware.Button;
-import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.BaseSensor;
@@ -16,12 +15,8 @@ public class Main {
 
 	/** Point d'entrée du programme */
 	public static void main(String[] args) {
-		//Affichage d'un message à l'écran
-//		LCD.drawString("Exploration !", 0, 1);
-		LCD.refresh();
-
 		//Initialisation des informations du robot
-		Robot robot = new Robot(7, 5, 1, 6, Robot.VERS_LE_HAUT);
+		final Robot robot = new Robot(7, 5, 0, 6, Robot.VERS_LE_HAUT);
 		Motor.B.setSpeed(100);
 		Motor.C.setSpeed(100);
 
@@ -39,18 +34,36 @@ public class Main {
 		Behavior bDriveForward = new DriveForward(); //Avancer
 		Behavior bDetectColor = new DetectColor(cs, robot);
 		Behavior bStopExploration = new StopExploration(robot);
-		Behavior bTurnRight = new TurnRight(robot);
-		Behavior bTurnLeft = new TurnLeft(robot);
-		Behavior bAboutTurn = new AboutTurn(robot);
+		Behavior bTurnRight = new TurnRight(robot, bDriveForward);
+		Behavior bTurnLeft = new TurnLeft(robot, bDriveForward);
+		Behavior bAboutTurn = new AboutTurn(robot, bDriveForward);
+		
+		robot.addDriveForwardBehavior(bDriveForward);
+		
 		Behavior[] bArray = {
-				bDriveForward, bDetectColor,
+				/*bDriveForward,*/ bDetectColor,
 				bTurnLeft, bTurnRight, bAboutTurn, //Priorité négligeable entre ces 3 comportements
-				bStopExploration, bSaveBattery, bShutDown};
-				//Du moins prioritaire au plus prioritaire
+				bStopExploration, bSaveBattery, bShutDown
+			}; //Du moins prioritaire au plus prioritaire
 
+		//Comportement DetectColor en arrière plan
+		//bDetectColor.action();
+		//new DetectColorThread(cs, robot).start();
+		
 		//Arbitrator pour coordonner les comportements
 		Arbitrator arby = new Arbitrator(bArray);
 		try{
+			new Thread(){
+			    public void run() {
+			    	//Attend que le capteur soit bien actif
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					robot.explorer();
+			    }
+			}.start();
 			arby.start();
 		}catch(Exception e){
 			e.printStackTrace();
