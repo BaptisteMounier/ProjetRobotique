@@ -236,6 +236,10 @@ public class Robot {
 					quartDeTourDroit();
 				}
 				break;
+				
+				/* Quart de tour vers la droite si monter-descente
+				Quart de tour vers la gauche si descendre-monter */
+				//Mettre un booléen en paramètre de la fonction ?
 		}
 	}
 	

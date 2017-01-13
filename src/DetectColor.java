@@ -113,7 +113,7 @@ public class DetectColor implements Behavior {
 		float green = sample[1];
 		float blue = sample[2];
 		
-		//Calcule de la couleur réelle
+		//Calcul de la couleur réelle
 		if(red + green + blue > 0.5f){
 			return Color.WHITE;
 		} else if(red + green + blue < 0.1f){
@@ -127,7 +127,7 @@ public class DetectColor implements Behavior {
 		} else if(red > (green + blue) * 2){
 			return Color.BROWN;
 		} else {
-			//Ne trouve pas blanc à cause de la limite de la case (noir + blanc mélangés)
+			//Couleur retournée par défaut
 			return Color.WHITE;
 		}
 	}
