@@ -120,11 +120,11 @@ public class DetectColor implements Behavior {
 			return Color.BLACK;
 		} else if(green > (red + blue)){
 			return Color.GREEN;
-		} else if(red > (green + blue) * 4){
+		} else if(red > (green + blue) * 2.5){
 			return Color.RED;
 		} else if((green + blue) > red * 2){
 			return Color.BLUE;
-		} else if(red > (green + blue) * 2){
+		} else if(red > (green + blue) * 1.5){
 			return Color.BROWN;
 		} else {
 			//Couleur retournée par défaut
