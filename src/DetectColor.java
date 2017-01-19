@@ -44,16 +44,12 @@ public class DetectColor implements Behavior {
 	public void action() {
 		//Si détection de noir, changement de case sur le plateau
 		if(detectedColor == Color.BLACK && oldColor != Color.BLACK){
-			//System.out.println(colorToString(detectedColor));
-			
 			changing = true;
 			robot.updatePos();
 			oldColor = detectedColor;
 		}
 		//Si changement de case et couleur détectée différente de noir
 		else if(detectedColor != Color.BLACK && changing){
-			//System.out.println(colorToString(detectedColor));
-			
 			changing = false;
 			if(!robot.isAlreadyExplored()){
 				robot.updateMap(detectedColor);
@@ -66,6 +62,12 @@ public class DetectColor implements Behavior {
 	@Override
 	public void suppress() {
 		//Rien à faire en cas d'arrêt du comportement
+	}
+	
+	/** Réinitialise les couleurs détectées */
+	public void resetBehavior(){
+		oldColor = Color.NONE;
+		detectedColor = Color.NONE;
 	}
 	
 	/** Convertit une couleur en chaîne de caractères

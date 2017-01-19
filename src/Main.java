@@ -33,7 +33,7 @@ public class Main {
 		Behavior bShutDown = new ShutDown(sensors); //S'arrête lors de l'appuie sur un bouton
 		Behavior bDriveForward = new DriveForward(); //Avancer
 		Behavior bDetectColor = new DetectColor(cs, robot);
-		Behavior bStopExploration = new StopExploration(robot);
+		Behavior bStopExploration = new StopExploration(robot, (DetectColor) bDetectColor);
 		Behavior bTurnRight = new TurnRight(robot, bDriveForward);
 		Behavior bTurnLeft = new TurnLeft(robot, bDriveForward);
 		Behavior bAboutTurn = new AboutTurn(robot, bDriveForward);
@@ -42,7 +42,7 @@ public class Main {
 		
 		Behavior[] bArray = {
 				/*bDriveForward,*/ bDetectColor,
-				bTurnLeft, bTurnRight, bAboutTurn, //Priorité négligeable entre ces 3 comportements
+				bTurnLeft, bTurnRight, bAboutTurn, //Ordre des priorités négligeable entre ces 3 comportements
 				bStopExploration, bSaveBattery, bShutDown
 			}; //Du moins prioritaire au plus prioritaire
 
@@ -61,7 +61,11 @@ public class Main {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					robot.displayMap();
+					/* Exploration */
 					robot.explorer();
+					/* Voyager vers une ville direction si exploration déjà faite */
+					//robot.letsGoToTheCity();
 			    }
 			}.start();
 			arby.start();

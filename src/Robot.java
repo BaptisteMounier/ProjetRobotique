@@ -2,6 +2,7 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import lejos.hardware.lcd.LCD;
@@ -14,7 +15,15 @@ import lejos.robotics.subsumption.Behavior;
 public class Robot {
 
 	/** Tableau bidimensionnel représentant la carte (grille) */
-	private int[][] map;
+	private int[][] map = {{Color.RED, Color.BLUE, Color.GREEN, Color.GREEN, Color.WHITE},
+		       {Color.GREEN, Color.BLUE, Color.GREEN, Color.GREEN, Color.GREEN},
+		       {Color.GREEN, Color.BLUE, Color.BLUE, Color.GREEN, Color.BROWN},
+		       {Color.GREEN, Color.GREEN, Color.BLUE, Color.GREEN, Color.GREEN},
+		       {Color.GREEN, Color.BROWN, Color.BROWN, Color.BROWN, Color.GREEN},
+		       {Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.BLUE},
+		       {Color.WHITE, Color.GREEN, Color.GREEN, Color.GREEN, Color.BLUE}};
+	/* Carte, uniquement une fois objectif exploration réalisée (au-dessus), en-dessous sinon */
+	/*private int[][] map;*/
 	/** Position de départ en abscisses */
 	private int posX;
 	/** Position de départ en ordonnées */
@@ -40,6 +49,16 @@ public class Robot {
 	
 	/** Correspondance des couleurs avec l'environnement */
 	private static HashMap<Integer,String> environnement;
+	/** Constante de l'environnement : Prairie */
+	private final static String PRAIRIE = "Prairie";
+	/** Constante de l'environnement : Océan */
+	private final static String OCEAN = "Océan";
+	/** Constante de l'environnement : Montagne */
+	private final static String MONTAGNE = "Montagne";
+	/** Constante de l'environnement : Ville */
+	private final static String VILLE = "Ville";
+	/** Constante de l'environnement : Départ */
+	private final static String DEPART = "Départ";
 	
 	/** Vrai si le robot doit activer le comportement AboutTurn */
 	private boolean demandeDemiTour = false;
@@ -62,20 +81,21 @@ public class Robot {
 		posX = x;
 		posY = y;
 		direction = dir;
-		map = new int[nbLigne][nbColonne];
-
+		
+		/* Carte si exploration à faire */
+		/*map = new int[nbLigne][nbColonne];
 		for(int l=0; l<nbLigne; l++){
 			for(int c=0; c<nbColonne; c++){
 				map[l][c] = Color.NONE;
 			}
-		}
+		}*/
 
 		environnement = new HashMap<Integer,String>();
-		environnement.put(Color.GREEN, "Prairie");
-		environnement.put(Color.BLUE, "Océan");
-		environnement.put(Color.BROWN, "Montagne");
-		environnement.put(Color.RED, "Ville");
-		environnement.put(Color.WHITE, "Départ");
+		environnement.put(Color.GREEN, PRAIRIE);
+		environnement.put(Color.BLUE, OCEAN);
+		environnement.put(Color.BROWN, MONTAGNE);
+		environnement.put(Color.RED, VILLE);
+		environnement.put(Color.WHITE, DEPART);
 		environnement.put(Color.NONE, "-");
 		
 		pilot = new DifferentialPilot(5.6, 12.0, Motor.B, Motor.C);
@@ -108,6 +128,27 @@ public class Robot {
 				posY += 1;
 				break;
 		}
+	}
+	
+	/** Met à jour la position du robot en fonction de sa direction (en sens inverse) */
+	public void updatePosInverse(){
+		switch(direction){
+		case VERS_LA_GAUCHE:
+			posX += 1;
+			break;
+
+		case VERS_LA_DROITE:
+			posX -= 1;
+			break;
+
+		case VERS_LE_HAUT:
+			posY += 1;
+			break;
+
+		case VERS_LE_BAS:
+			posY -= 1;
+			break;
+	}
 	}
 	
 	/** Mettre à jour la direction du robot en fonction d'une rotation
@@ -162,23 +203,33 @@ public class Robot {
 		int mapHeight = this.getMapHeight();
 		
 		for(int c=0; c<this.getMapLength(); c++){
+			//Parcours de la colonne puis décalage sur la suivante
 			if(c%2 == 0){ //Vers le haut
-				//Parcours de la colonne puis décalage sur la suivante
-				this.voyager(c, 0, true);
-				this.voyager(c+1, 0, true);
+				this.voyager(c+1, 0);
+				if(c != this.getMapLength()-1){
+					//Quart-de-tour vers la prochaine colonne sauf si dernière colonne
+					quartDeTourDroit();
+				}
 			} else { //Vers le bas
-				//Parcours de la colonne puis décalage sur la suivante
-				this.voyager(c, mapHeight-1, false);
-				this.voyager(c+1, mapHeight-1, false);
+				this.voyager(c+1, mapHeight-1);
+				quartDeTourGauche();
 			}
 		}
+		
+		//Pause puis voyage vers une ville une fois exploration terminée
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		this.letsGoToTheCity();
 	}
 	
 	/** Fait se déplacer le robot de sa position actuelle à la position demandée
-	 * @param xDest Abscisse de la position de destination
-	 * @param yDest Ordonnée de la position de destination */
-	public void voyager(int xDest, int yDest, boolean quartDeTourDroit){
+	 * @param xDest Abscisse de la position de destination */
+	public void voyager(int xDest, int yDest){
 		//System.out.println(xDest + " " + yDest + " " + posX + " " + posY + "\n" + direction);
+		
 		//Recherche de la position de la destination par rapport à la position actuelle
 		int xDir = -1;
 		int yDir = -1;
@@ -195,9 +246,26 @@ public class Robot {
 			yDir = VERS_LE_BAS;
 		}
 		
-		switch(direction){
-			case VERS_LE_HAUT:
-			case VERS_LE_BAS:
+		//Recherche du côté vers lequel faire le quart-de-tour entre les 2 déplacements
+		boolean quartDroit = false;
+		boolean quartGauche = false;
+		if(direction == VERS_LA_GAUCHE || direction == VERS_LA_DROITE){
+			if((xDir == VERS_LA_DROITE && yDir == VERS_LE_HAUT) || (xDir == VERS_LA_GAUCHE && yDir == VERS_LE_BAS)){
+				quartGauche = true;
+			} else {
+				quartDroit = true;
+			}
+		} else { //VERS_LA_HAUT || VERS_LA_BAS
+			if((xDir == VERS_LA_DROITE && yDir == VERS_LE_HAUT) || (xDir == VERS_LA_GAUCHE && yDir == VERS_LE_BAS)){
+				quartDroit = true;
+			} else {
+				quartGauche = true;
+			}
+		}
+		
+		//Déplacement en 2 temps
+		for(int i=0; i<2; i++){
+			if(direction == VERS_LE_HAUT || direction == VERS_LE_BAS){
 				if(posY != yDest){
 					if(yDir != direction){
 						demiTour();
@@ -209,18 +277,9 @@ public class Robot {
 						//TODO trouver un autre moyen de savoir quand arrêter le robot
 					}
 					bDriveForward.suppress();
-					
 					avancer(4.);
-					if(quartDeTourDroit){
-						quartDeTourDroit();	
-					} else {
-						quartDeTourGauche();
-					}
 				}
-				break;
-			
-			case VERS_LA_DROITE:
-			case VERS_LA_GAUCHE:
+			} else { //VERS_LA_DROITE || VERS_LA_GAUCHE
 				if(posX != xDest){
 					if(xDir != direction){
 						demiTour();
@@ -232,16 +291,46 @@ public class Robot {
 						//TODO trouver un autre moyen de savoir quand arrêter le robot
 					}
 					bDriveForward.suppress();
-					
 					avancer(4.);
-					if(quartDeTourDroit){
-						quartDeTourDroit();	
-					} else {
-						quartDeTourGauche();
-					}
 				}
-				break;
+			}
+			
+			//Quart-de-tour entre les deux déplacements
+			if(i == 0){
+				if(quartDroit){
+					quartDeTourDroit();
+				} else if(quartGauche) {
+					quartDeTourGauche();
+				}
+			}
 		}
+	}
+	
+	/** Emmène le robot à la ville la plus proche */
+	public void letsGoToTheCity(){
+		//Recherche des villes
+		ArrayList<Integer[]> villes = new ArrayList<Integer[]>();
+		for(int l=0; l<map.length; l++){
+			for(int c=0; c<map[0].length; c++){
+				if(environnement.get(map[l][c]) == VILLE){
+					villes.add(new Integer[]{l,c});
+				}
+			}
+		}
+		
+		//Cherche la ville la plus proche
+		int distanceMin = Integer.MAX_VALUE;
+		int indexVilleMin = -1;
+		for(int i=0; i<villes.size(); i++){
+			int distance = Math.abs(villes.get(i)[0] - posY) + Math.abs(villes.get(i)[1] - posX);
+			if(distance < distanceMin){
+				indexVilleMin = i;
+				distanceMin = distance;
+			}
+		}
+		
+		//Déplacement vers la ville la plus proche
+		voyager(villes.get(indexVilleMin)[1], villes.get(indexVilleMin)[0]);
 	}
 	
 	/** Fait avancer le robot du nombre de cm donné paramètre
