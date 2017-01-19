@@ -9,7 +9,6 @@ import lejos.hardware.motor.Motor;
 import lejos.robotics.Color;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
-import lejos.utility.Delay;
 
 /** Représentation du Robot */
 public class Robot {
@@ -165,22 +164,20 @@ public class Robot {
 		for(int c=0; c<this.getMapLength(); c++){
 			if(c%2 == 0){ //Vers le haut
 				//Parcours de la colonne puis décalage sur la suivante
-				this.voyager(c, 0);
-				this.voyager(c+1, 0);
+				this.voyager(c, 0, true);
+				this.voyager(c+1, 0, true);
 			} else { //Vers le bas
 				//Parcours de la colonne puis décalage sur la suivante
-				this.voyager(c, mapHeight-1);
-				this.voyager(c+1, mapHeight-1);
+				this.voyager(c, mapHeight-1, false);
+				this.voyager(c+1, mapHeight-1, false);
 			}
 		}
-		/*this.voyager(0, 0);
-		this.voyager(4, 0);*/
 	}
 	
 	/** Fait se déplacer le robot de sa position actuelle à la position demandée
 	 * @param xDest Abscisse de la position de destination
 	 * @param yDest Ordonnée de la position de destination */
-	public void voyager(int xDest, int yDest){
+	public void voyager(int xDest, int yDest, boolean quartDeTourDroit){
 		//System.out.println(xDest + " " + yDest + " " + posX + " " + posY + "\n" + direction);
 		//Recherche de la position de la destination par rapport à la position actuelle
 		int xDir = -1;
@@ -214,7 +211,11 @@ public class Robot {
 					bDriveForward.suppress();
 					
 					avancer(4.);
-					quartDeTourDroit();
+					if(quartDeTourDroit){
+						quartDeTourDroit();	
+					} else {
+						quartDeTourGauche();
+					}
 				}
 				break;
 			
@@ -233,13 +234,13 @@ public class Robot {
 					bDriveForward.suppress();
 					
 					avancer(4.);
-					quartDeTourDroit();
+					if(quartDeTourDroit){
+						quartDeTourDroit();	
+					} else {
+						quartDeTourGauche();
+					}
 				}
 				break;
-				
-				/* Quart de tour vers la droite si monter-descente
-				Quart de tour vers la gauche si descendre-monter */
-				//Mettre un booléen en paramètre de la fonction ?
 		}
 	}
 	
@@ -276,7 +277,7 @@ public class Robot {
 	public void quartDeTourDroit(){
 		//Faire quart-tour
 		demandeQuartDeTourDroit = true;
-		//Attend fin du demi-tour
+		//Attend fin du quart-de-tour
 		try {
 			Thread.sleep(7000);
 		} catch (InterruptedException e) {
@@ -299,7 +300,7 @@ public class Robot {
 	public void quartDeTourGauche(){
 		//Faire quart-tour
 		demandeQuartDeTourGauche = true;
-		//Attend fin du demi-tour
+		//Attend fin du quart-de-tour
 		try {
 			Thread.sleep(7000);
 		} catch (InterruptedException e) {

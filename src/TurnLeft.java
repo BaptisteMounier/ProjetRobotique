@@ -2,7 +2,6 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
-import lejos.hardware.Button;
 import lejos.hardware.motor.Motor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
@@ -25,7 +24,6 @@ public class TurnLeft implements Behavior {
 	public boolean takeControl() {
 		//Prend le contrôle si le robot veut faire demi-tour
 		return (robot.isRequestingForTurnLeft());
-		//return (Button.LEFT.isDown());
 	}
 
 	@Override
