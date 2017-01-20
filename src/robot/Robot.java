@@ -2,6 +2,8 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
+package robot;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,6 +73,44 @@ public class Robot {
 	private Behavior bDriveForward;
 	/** Pilot permettant d'effectuer des trajectoires */
 	private DifferentialPilot pilot;
+	
+	/** Etat de la réception d'une demande d'aide */
+	private boolean demandeAideRecue = false;
+	/** Position en abscisses du robot à secourir */
+	private int xTarget;
+	/** Position en ordonnées du robot à secourir */
+	private int yTarget;
+	
+	/** Mutateur de l'état de la réception d'une demande d'aide */
+	public void setDemandeAideRecue(boolean demandeAideRecue){
+		this.demandeAideRecue = demandeAideRecue;
+	}
+	
+	/** Accesseur de l'état de la réception d'une demande d'aide
+	 * @return L'état de la réception d'une demande d'aide, vrai si une demande est reçue */
+	public boolean isDemandeAideRecue(){
+		return demandeAideRecue;
+	}
+	
+	/** Met à jours la position du robot à secourir
+	 * @param x La position en abscisse du robot à secourir
+	 * @param y La position en ordonnées du robot à secourir */
+	public void updateTargetPosition(int x, int y){
+		xTarget = x;
+		yTarget = y;
+	}
+	
+	/** Accesseur de la position en abscisse du robot à secourir
+	 * @return La position en abscisse du robot à secourir */
+	public int getXTarget(){
+		return xTarget;
+	}
+
+	/** Accesseur de la position en ordonnées du robot à secourir
+	 * @return La position en ordonnées du robot à secourir */
+	public int getYTarget(){
+		return yTarget;
+	}
 
 	/** Constructeur principal du robot
 	 * @param nbLigne Nombre de lignes
@@ -412,4 +452,17 @@ public class Robot {
 	public void addDriveForwardBehavior(Behavior bDriveForward) {
 		this.bDriveForward = bDriveForward;
 	}
+	
+	/** Accesseur de la position sur x (abscisse) du robot
+	 * @return Abscisse de la position du robot */
+	public int getPosX(){
+		return this.posX;
+	}
+
+	/** Accesseur de la position sur y (ordonnée) du robot
+	 *  @return Ordonnée de la position du robot */
+	public int getPosY(){
+		return this.posY;
+	}
+	
 }

@@ -2,6 +2,8 @@
 //Auteurs : Gutierrez Cyrian - Magnin Gauthier - Mounier Baptiste
 //Contexte : TSCR - Projet robotique - M1 SCA
 
+package robot;
+
 import lejos.hardware.motor.Motor;
 import lejos.robotics.subsumption.Behavior;
 
