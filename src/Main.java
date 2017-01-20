@@ -45,10 +45,6 @@ public class Main {
 				bTurnLeft, bTurnRight, bAboutTurn, //Ordre des priorités négligeable entre ces 3 comportements
 				bStopExploration, bSaveBattery, bShutDown
 			}; //Du moins prioritaire au plus prioritaire
-
-		//Comportement DetectColor en arrière plan
-		//bDetectColor.action();
-		//new DetectColorThread(cs, robot).start();
 		
 		//Arbitrator pour coordonner les comportements
 		Arbitrator arby = new Arbitrator(bArray);
